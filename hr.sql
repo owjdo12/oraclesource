@@ -77,4 +77,27 @@ SELECT employee_id, CONCAT(first_name,CONCAT(' ',last_name)) department_id, job_
 
 --실습
 --부서80의 각사원에 대해 적용가능한 세율을 표시하시오
-SELECT last_name, salary, tax_rate FROM employees WHERE departmen_id = 80;
+SELECT last_name, salary, CASE WHEN salary<2000 THEN 0 
+                                WHEN (salary<4000) THEN 0.09
+                                WHEN (salary<6000) THEN 0.2
+                                WHEN (salary<8000) THEN 0.3
+                                WHEN (salary<10000) THEN 0.4
+                                WHEN (salary<12000) THEN 0.42
+                                WHEN (salary<14000) THEN 0.44
+                                ELSE 0.45 END as tax_rate FROM employees WHERE department_id = 80;
+--0~1,999 :0%, 2000~3999: 9%, 4000~5999: 20%, 6000~7999: 30%, 8000~9999: 40%, 10000~11999: 42%, 12000~13999: 44%, 14000이상: 45%
+SELECT last_name, salary, DECODE(TRUNC(salary/2000,0),0,0.00, 
+                                                    1, 0.09,
+                                                    2,0.20,
+                                                    3,0.30,
+                                                    4,0.40,
+                                                    5,0.42,
+                                                    6,0.44,
+                                                    0.45) as TAX_RATE FROM employees WHERE department_id = 80;
+                                                
+--다중행함수 연습
+--회사 내의 최대 연봉 및 최소 연봉차이를 조회
+SELECT MAX(salary)-MIN(salary) FROM employees;
+
+--매니저로 근무하는 사원들의 인원수 조회
+SELECT COUNT(DISTINCT manager_id) FROM employees;
