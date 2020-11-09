@@ -275,4 +275,11 @@ SELECT empno, ename, mgr, CASE WHEN EMPNO IS NULL THEN 0000 WHEN EMPNO LIKE '75%
 SELECT empno, ename, mgr, DECODE(SUBSTR(TO_CHAR(MGR),1,2), null, '0000', '75', '0000','76', '6666',
                                                             '77', '7777', '78', '8888', TO_CHAR(mgr)) as CHG_MGR FROM EMP;
 
--- 2) 
+--서브쿼리 PPT실습
+--10번부서에 근무하는 사원중 30번 부서에는 존재하지 않는 직책을 가진 사원들의 사원정보, 부서정보를 다음과 같이 출력
+SELECT E.ENAME, E.ENAME, E.JOB, D.DEPTNO, D.DNAME, D.LOC FROM EMP E, DEPT D 
+WHERE E.DEPTNO=D.DEPTNO AND E.JOB NOT IN (SELECT DISTINCT JOB FROM EMP WHERE DEPTNO=30)AND E.DEPTNO=10;  
+
+--직책이 SALESMAN인 사람들의 최고급여보다 높은 급여를 받는 사원들의 사원정보, 급여등급 정보를 출력(단, 서브쿼리를 활용할때 다중행함수를 사용하는 방법과 사용하지 않는방법을 통해 사원번호를 기준으로 오름차순 정렬하여 출력)
+SELECT EMPNO, ENAME, SAL,(SELECT GRADE FROM SALGRADE WHERE E.SAL BETWEEN LOSAL AND HISAL) AS GRADE FROM EMP E 
+WHERE SAL>(SELECT MAX(SAL) FROM EMP WHERE JOB='SALESMAN');
